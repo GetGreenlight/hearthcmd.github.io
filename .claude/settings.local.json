@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "command": "/usr/local/bin/greenlight hook",
+            "type": "command"
+          }
+        ],
+        "matcher": "AskUser|ExitPlanMode"
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "/usr/local/bin/greenlight hook",
+            "type": "command"
+          }
+        ],
+        "matcher": "AskUser|ExitPlanMode"
+      }
+    ]
+  }
+}

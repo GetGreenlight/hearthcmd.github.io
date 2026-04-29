@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - Hearth Cmd</title>
+  <link rel="icon" type="image/png" href="hearth-logo-1024.png">
+  <link rel="stylesheet" href="style.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5W4B1J7E1F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5W4B1J7E1F');
+  </script>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" class="brand">
+        <img src="hearth-logo-1024.png" alt="Hearth Cmd logo">
+        Hearth Cmd
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="legal">
+    <div class="container">
+      <h1>Privacy Policy</h1>
+      <p class="last-updated">Last updated: February 20, 2026</p>
+
+      <p>Hearth Cmd ("we", "our", "the Service") is operated by David Farrell. This policy describes what data we collect, how we use it, and your rights regarding that data.</p>
+
+      <h2>1. Data We Collect</h2>
+      <p>Hearth Cmd collects the minimum data necessary to deliver permission request notifications to your device:</p>
+      <ul>
+        <li><strong>Device identifier:</strong> A randomly generated UUID created on your device and stored in your iCloud Keychain. This identifier is used to route permission requests to your device. It is not linked to your Apple ID, name, or any other personal information.</li>
+        <li><strong>Device secret:</strong> A cryptographic secret generated on your device and stored in your iCloud Keychain. This is used to authenticate communication between the app and the relay server.</li>
+        <li><strong>APNs token:</strong> A token provided by Apple Push Notification service, used solely to deliver push notifications when the app is not in the foreground. This token is device-specific and does not identify you personally.</li>
+        <li><strong>Permission request data:</strong> When your AI coding agent sends a permission request, the request content (tool name, command, file path, etc.) is relayed through our server to your device. Request metadata — including the tool name, tool input, your decision, and a timestamp — is logged and archived for operational and dispute resolution purposes. These logs allow us to investigate issues and verify what actions were requested and how they were resolved.</li>
+        <li><strong>Always-allow rules:</strong> If you choose "Always Allow" for a request, a pattern-based rule is stored on the server associated with your device identifier. You can view and delete these rules at any time in the app.</li>
+        <li><strong>Activity stream data:</strong> If you enable the <code>--activity</code> flag, Claude Code's transcript entries (tool calls, text responses, and user messages) are streamed through our server to your device in real time. This data is relayed in memory only &mdash; it is never written to disk, logged, or stored on our servers.</li>
+      </ul>
+
+      <h2>2. Data We Do Not Collect</h2>
+      <ul>
+        <li>We do not collect your name, email address, or Apple ID.</li>
+        <li>We do not collect your IP address for tracking purposes.</li>
+        <li>We do not collect analytics, usage metrics, or telemetry.</li>
+        <li>We do not use cookies or third-party tracking.</li>
+        <li>We do not access your source code, files, or any data on your computer beyond what is included in the permission request payload sent by the hook script.</li>
+      </ul>
+
+      <h2>3. How We Use Your Data</h2>
+      <p>All data collected is used exclusively to provide the core functionality of the Service:</p>
+      <ul>
+        <li>Routing permission requests from your AI coding agent to your device.</li>
+        <li>Sending push notifications to wake the app when a request arrives.</li>
+        <li>Evaluating always-allow rules to auto-approve matching requests.</li>
+      </ul>
+      <p>We do not sell, share, or transfer your data to any third party, except Apple Push Notification service (APNs) for the sole purpose of delivering notifications.</p>
+
+      <h2>4. Data Storage and Security</h2>
+      <ul>
+        <li>Your device identifier and secret are stored in your iCloud Keychain, which is end-to-end encrypted by Apple.</li>
+        <li>The relay server stores your device identifier (hashed secret) and APNs token in a database to route requests and send notifications.</li>
+        <li>Always-allow rules are stored server-side and associated with your device identifier.</li>
+        <li>All communication between the app and the server uses TLS encryption (HTTPS/WSS).</li>
+        <li>Permission request metadata (tool name, tool input, decision, and timestamps) is logged for operational, audit, and dispute resolution purposes. Active log files are rotated automatically; older logs may be moved to cold storage and retained indefinitely.</li>
+      </ul>
+
+      <h2>5. Data Retention</h2>
+      <p>Device registrations and always-allow rules are retained as long as you use the Service. Permission request logs may be archived to cold storage and retained indefinitely for audit and compliance purposes. If you uninstall the app, your device registration will become orphaned (no further requests can be delivered).</p>
+
+      <h2>6. Children's Privacy</h2>
+      <p>Hearth Cmd is not directed at children under 13 and we do not knowingly collect data from children.</p>
+
+      <h2>7. Changes to This Policy</h2>
+      <p>We may update this policy from time to time. Changes will be posted on this page with an updated "Last updated" date. Continued use of the Service after changes constitutes acceptance of the revised policy.</p>
+
+      <h2>8. Contact</h2>
+      <p>If you have questions about this privacy policy or your data, contact us at <a href="mailto:support@hearthcmd.com">support@hearthcmd.com</a>.</p>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="support.html">Support</a>
+        <a href="mailto:support@hearthcmd.com">Contact</a>
+      </div>
+      <p class="copyright">&copy; 2025-2026 David Farrell. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

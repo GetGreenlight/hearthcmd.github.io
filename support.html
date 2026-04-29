@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support &amp; Setup - Hearth Cmd</title>
+  <meta name="description" content="Get started with Hearth Cmd. Installation instructions, setup guide, and support for AI agent management.">
+  <link rel="icon" type="image/png" href="hearth-logo-1024.png">
+  <link rel="stylesheet" href="style.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5W4B1J7E1F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5W4B1J7E1F');
+  </script>
+</head>
+<body>
+  <nav>
+    <div class="container">
+      <a href="/" class="brand">
+        <img src="hearth-logo-1024.png" alt="Hearth Cmd logo">
+        Hearth Cmd
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="guide.html">Setup Guide</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="docs">
+    <div class="container">
+      <h1>Support & Setup Guide</h1>
+
+      <h2>Getting Started</h2>
+      <p>For a detailed walkthrough including how the rules system works, see the <a href="guide.html">setup guide</a>.</p>
+
+      <h3>1. Install the App</h3>
+      <p>Download Hearth Cmd from the App Store and open it. The app will automatically generate a unique device ID and connect to the relay server.</p>
+
+      <h3>2. Copy Your Device ID</h3>
+      <p>Go to the <strong>About</strong> tab in the app and tap your Device ID to copy it to the clipboard. You'll need this for the next steps.</p>
+
+      <h3>3. Install hearth-cmd-cli</h3>
+      <p>Run the install script (requires Go 1.19+):</p>
+      <pre><code>curl -sSL https://hearthcmd.com/install.sh | bash</code></pre>
+      <p>This clones the repo, builds from source, and installs the binary to <code>/usr/local/bin</code>.</p>
+      <p>Alternatively, unsigned pre-built binaries are available from <a href="https://github.com/GetGreenlight/hearth-cmd-cli/releases">GitHub releases</a> (see that page for macOS Gatekeeper instructions).</p>
+      <p>Register your device ID (you only need to do this once):</p>
+      <pre><code>hearth register YOUR_DEVICE_ID</code></pre>
+      <p>You can also pass <code>--device-id</code> as a flag or set the <code>HEARTH_DEVICE_ID</code> environment variable.</p>
+
+      <h3>4. Set Your Default Agent</h3>
+      <pre><code>hearth agent claude</code></pre>
+      <p>Supported values: <code>claude</code>, <code>copilot</code>, <code>cursor</code>, <code>codex</code>, <code>pi</code>. You only need to do this once.</p>
+
+      <h3>5. Launch</h3>
+      <pre><code>cd your-project
+hearth connect --project myproject</code></pre>
+      <p>hearth-cmd-cli launches your agent in yolo mode so it never blocks on a terminal prompt. Hearth Cmd's libhook permission engine intercepts all reads, writes, network IO, and shell commands &mdash; forwarding them to your phone for approval. The first time, you'll see a session enrollment prompt on your phone &mdash; tap <strong>Allow</strong>.</p>
+      <p>To resume a previous session:</p>
+      <pre><code>hearth connect --project myproject --resume SESSION_ID</code></pre>
+
+      <h3>6. Test It</h3>
+      <p>Ask your agent to do something that requires permission, like writing a file. You should see a request appear in the app.</p>
+
+
+      <h2>hearth-cmd-cli Options</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Default</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>--device-id ID</code></td>
+            <td>Your device ID from the app</td>
+            <td>Config file or env var</td>
+          </tr>
+          <tr>
+            <td><code>--project NAME</code></td>
+            <td>Project name shown in the app. Rules are scoped per-project.</td>
+            <td>Required</td>
+          </tr>
+          <tr>
+            <td><code>--resume SESSION_ID</code></td>
+            <td>Resume a previous session instead of starting a new one</td>
+            <td>&mdash;</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Configuration priority: command-line flag &gt; environment variable (<code>HEARTH_DEVICE_ID</code>) &gt; config file (<code>~/.hearth/config</code>).</p>
+
+      <h2>Using the App</h2>
+
+      <h3>Permission Decisions</h3>
+      <p>Each request can be responded to with four actions:</p>
+      <ul>
+        <li><strong>Always Allow</strong> — Approves and creates a rule so future matching requests are auto-approved.</li>
+        <li><strong>Allow</strong> — Approves this one request.</li>
+        <li><strong>Deny</strong> — Denies this one request.</li>
+        <li><strong>Deny & Stop</strong> — Denies and sends a halt signal to stop the agent entirely.</li>
+      </ul>
+
+      <h3>How Rules Work</h3>
+      <p>Tapping "Always Allow" generates a pattern that auto-approves future matching commands without interrupting you.</p>
+      <p>Patterns are <strong>subcommand-aware</strong>. The system knows that <code>git push</code> and <code>git status</code> are different operations:</p>
+      <ul>
+        <li><code>go build ./cmd/foo</code> &rarr; pattern <code>Bash(go build **)</code> &mdash; matches any <code>go build</code></li>
+        <li><code>git push origin main</code> &rarr; pattern <code>Bash(git push **)</code> &mdash; matches any <code>git push</code>, but not <code>git reset</code></li>
+        <li><code>aws s3 cp file.txt s3://bucket/</code> &rarr; pattern <code>Bash(aws s3 cp **)</code> &mdash; three-word prefix for AWS/GCloud</li>
+      </ul>
+      <p>Commands like <code>rm</code>, <code>sudo</code>, <code>kill</code>, and <code>chmod</code> use <strong>exact matching</strong>. Granting <code>rm -rf /tmp/coverage</code> creates a rule that matches only that exact string &mdash; not <code>rm -rf /home</code>.</p>
+      <p>For compound commands like <code>git add . && git commit -m "msg" && git push</code>, the system splits into segments and generates a separate pattern for each. All segments must have matching rules for auto-approval. Each segment is color-coded by risk (green/orange/red) and segments already covered by rules show a checkmark overlay.</p>
+      <p>For <code>Read</code>, <code>Write</code>, and <code>Edit</code> tools, patterns match on the directory (e.g., <code>Edit(/home/user/project/src/**)</code>).</p>
+
+      <h3>Managing Rules</h3>
+      <p>The <strong>Grants</strong> tab shows all your "Always Allow" rules grouped by project. Swipe left on any rule to delete it.</p>
+
+      <h3>Talk to Your Agent from Your Phone</h3>
+      <p>The Activity tab shows an input bar at the bottom. Anything you type is sent directly to your agent session as if you typed it at the terminal. Use this to answer prompts, provide additional context, or nudge your agent in a different direction.</p>
+      <p>Talk to Your Agent requires Hearth Cmd Pro. Pro also includes push notifications so you never miss a request.</p>
+
+      <h3>Notifications</h3>
+      <p>Hearth Cmd uses Time Sensitive notifications that can break through Focus modes. Make sure notifications are enabled in <strong>Settings &rarr; Hearth Cmd &rarr; Notifications</strong> and that Time Sensitive notifications are allowed in your Focus mode settings.</p>
+
+      <h2 id="troubleshooting">Troubleshooting</h2>
+
+      <h3>Not receiving requests</h3>
+      <ul>
+        <li>Check the <strong>About</strong> tab &mdash; the status should show "Connected" with a green dot.</li>
+        <li>Verify your device ID in <code>~/.hearth/config</code> matches the one shown in the app.</li>
+        <li>Make sure you launched your agent with <code>hearth connect</code>.</li>
+      </ul>
+
+      <h3>Session not appearing on phone</h3>
+      <ul>
+        <li>Verify the device ID in your <code>~/.hearth/config</code> matches the one in the app's <strong>About</strong> tab.</li>
+        <li>Check the phone's connection status &mdash; the <strong>About</strong> tab should show a green "Connected" dot.</li>
+        <li>The session should appear immediately when you run <code>hearth connect</code>. If it doesn't, check the hearth log file for errors.</li>
+      </ul>
+
+      <h3>Talk to Your Agent not working</h3>
+      <ul>
+        <li>Talk to Your Agent requires a Hearth Cmd Pro subscription.</li>
+        <li>You must launch your agent with <code>hearth connect</code>.</li>
+        <li>Check that the Activity tab shows an input bar at the bottom when viewing the session.</li>
+      </ul>
+
+      <h3>Not receiving push notifications</h3>
+      <ul>
+        <li>Check that notifications are enabled: <strong>Settings &rarr; Hearth Cmd &rarr; Notifications</strong>.</li>
+        <li>If using a Focus mode, make sure Hearth Cmd is in the allowed apps list or Time Sensitive notifications are enabled.</li>
+        <li>Push notifications are sent when the app is backgrounded. If the app is in the foreground, requests arrive directly via WebSocket.</li>
+      </ul>
+
+      <h3>Requests timing out</h3>
+      <ul>
+        <li>The default timeout is 590 seconds.</li>
+        <li>If the app is not connected and push notifications fail, the request will time out and be denied.</li>
+      </ul>
+
+      <h2>Contact</h2>
+      <p>For bug reports, feature requests, or any questions, email <a href="mailto:support@hearthcmd.com">support@hearthcmd.com</a>.</p>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="support.html">Support</a>
+        <a href="mailto:support@hearthcmd.com">Contact</a>
+      </div>
+      <p class="copyright">&copy; 2025-2026 David Farrell. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
