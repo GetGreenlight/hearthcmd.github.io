@@ -6,15 +6,15 @@
 }
 
 :root {
-  --green: #39e75f;
-  --green-glow: rgba(57, 231, 95, 0.3);
-  --dark: #0a0a0a;
-  --dark-surface: #141414;
-  --dark-card: #1a1a1a;
-  --dark-border: #2a2a2a;
-  --text: #e0e0e0;
-  --text-muted: #888;
-  --text-heading: #fff;
+  --accent: #f5a02e;
+  --accent-glow: rgba(245, 160, 46, 0.32);
+  --dark: #0d0805;
+  --dark-surface: #15100b;
+  --dark-card: #1c1611;
+  --dark-border: #2a2118;
+  --text: #e8e0d4;
+  --text-muted: #968675;
+  --text-heading: #fff5e0;
 }
 
 html {
@@ -30,7 +30,7 @@ body {
 }
 
 a {
-  color: var(--green);
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -98,7 +98,7 @@ nav .nav-links a:hover {
   height: 128px;
   border-radius: 28px;
   margin-bottom: 32px;
-  box-shadow: 0 0 60px var(--green-glow);
+  box-shadow: 0 0 60px var(--accent-glow);
 }
 
 .hero h1 {
@@ -118,21 +118,36 @@ nav .nav-links a:hover {
 
 .hero .supported-agents {
   font-size: 1.05rem;
-  color: var(--green);
+  color: var(--accent);
   margin: 0 auto 40px;
 }
 
 .hero-video {
   display: block;
   margin: 0 auto 32px;
+  width: 100%;
+  max-width: 560px;
   max-height: 500px;
+  aspect-ratio: 16 / 9;
   border-radius: 16px;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
 }
 
+.media-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dark-card);
+  border: 1px dashed var(--dark-border);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
 .cta-button {
   display: inline-block;
-  background: var(--green);
+  background: var(--accent);
   color: var(--dark);
   font-weight: 600;
   font-size: 1rem;
@@ -192,7 +207,7 @@ section h2 {
   flex-shrink: 0;
   width: 36px;
   height: 36px;
-  background: var(--green);
+  background: var(--accent);
   color: var(--dark);
   font-weight: 700;
   font-size: 1rem;
@@ -389,13 +404,13 @@ footer .copyright {
 }
 
 .copy-btn:hover {
-  background: var(--green);
-  color: #000;
+  background: var(--accent);
+  color: var(--dark);
 }
 
 .copy-btn.copied {
-  background: var(--green);
-  color: #000;
+  background: var(--accent);
+  color: var(--dark);
   opacity: 1;
 }
 
