@@ -28,7 +28,7 @@
     <div class="container">
       <h1>Hearth Cmd Setup Guide</h1>
 
-      <p>Hearth Cmd is mission control for your AI coding agents. It launches your agent in yolo mode so it never blocks on a terminal prompt. Hearth Cmd's permission engine intercepts all reads, writes, network IO, and shell commands &mdash; routing them to your phone for approval. Smart rules auto-approve trusted actions so your agents keep working. When something needs your attention, you handle it from anywhere.</p>
+      <p>Hearth Cmd is mission control for your AI coding agents. You install a small CLI on each machine where you want agents to run, log in once with your email, and start the daemon. From then on, you spawn and manage agents from your phone. The CLI's permission engine intercepts every read, write, network call, and shell command and routes them to the app for approval. Smart rules auto-approve trusted actions so your agents keep working.</p>
 
       <h2>Supported Agents</h2>
       <ul>
@@ -46,39 +46,46 @@
         <li>macOS, Linux, or WSL2</li>
       </ul>
 
-      <h2>Step 1: Get Your Device ID</h2>
-      <p>Open Hearth Cmd on your phone and go to the <strong>About</strong> tab. Tap your Device ID to copy it to the clipboard.</p>
-
-      <h2>Step 2: Install hearth-cmd-cli</h2>
+      <h2>Step 1: Install the CLI</h2>
       <pre><code>curl -sSL https://hearthcmd.com/install.sh | bash</code></pre>
-      <p>This downloads the latest binary for your system and installs it to <code>/usr/local/bin</code>.</p>
+      <p>Downloads the latest binary for your system and installs it to <code>/usr/local/bin/hearth</code>.</p>
 
-      <p>Register your device ID (you only need to do this once):</p>
-      <pre><code>hearth register YOUR_DEVICE_ID</code></pre>
-      <p>You can also pass <code>--device-id</code> as a flag or set the <code>HEARTH_DEVICE_ID</code> environment variable.</p>
+      <h2>Step 2: Log In</h2>
+      <p>Run <code>hearth login</code> with your email:</p>
+      <pre><code>hearth login you@example.com</code></pre>
+      <p>Hearth Cmd emails you a 6-digit code. Check your inbox, copy the code, and paste it at the prompt:</p>
+      <pre><code>A 6-digit code has been sent to you@example.com.
+Enter the code: 123456</code></pre>
+      <p>If this is your first time logging in, you'll also be asked for a display name and an organization name (press Enter to accept the suggested defaults). Once verified, this machine is enrolled as a host under your account &mdash; you don't need to log in again on this machine unless you sign out.</p>
 
-      <h2>Step 3: Set Your Default Agent</h2>
-      <p>Tell Hearth Cmd which agent you want to use:</p>
-      <pre><code>hearth agent claude</code></pre>
-      <p>Supported values: <code>claude</code>, <code>copilot</code>, <code>cursor</code>, <code>codex</code>, <code>pi</code>. You only need to do this once &mdash; the setting is saved to your config.</p>
+      <h2>Step 3: Start the Daemon</h2>
+      <pre><code>hearth start</code></pre>
+      <p>The daemon runs in the background and listens for spawn requests from the app. You can check on it any time with:</p>
+      <pre><code>hearth status</code></pre>
+      <p>Stop it with <code>hearth stop</code>. It does not auto-start on boot &mdash; run <code>hearth start</code> after a reboot if you want the host available to your phone.</p>
 
-      <h2>Step 4: Launch</h2>
-      <pre><code>cd your-project
-hearth connect --project myproject</code></pre>
-      <p>That's it. hearth-cmd-cli handles everything automatically:</p>
+      <h2>Step 4: Sign In on Your Phone</h2>
+      <p>Open Hearth Cmd on your iPhone, enter the same email address, and enter the 6-digit code that arrives in your inbox. The app picks up the host you just enrolled and shows it in the host list.</p>
+
+      <h2>Step 5: Spawn an Agent from the App</h2>
+      <p>Everything from here happens on your phone. To start a new agent session:</p>
+      <ol>
+        <li>Tap <strong>+ New Agent</strong> on the home screen.</li>
+        <li>Pick the host you want the agent to run on.</li>
+        <li>Pick a working directory (or add a new one and point it at any folder on that host).</li>
+        <li>Pick the agent &mdash; Claude Code, Copilot CLI, Cursor CLI, Codex CLI, or Pi.</li>
+        <li>Tap <strong>Start</strong>.</li>
+      </ol>
+      <p>The agent launches on your laptop in yolo mode &mdash; it never blocks on a terminal prompt. The app shows the live activity stream as the agent works. The first time the agent does anything that needs permission (writing a file, running a command, hitting the network), you'll get a prompt on your phone.</p>
+
+      <h2>Day-to-Day from the App</h2>
       <ul>
-        <li>Launches your agent in yolo mode so it never blocks on a terminal prompt</li>
-        <li>Hearth Cmd's libhook permission engine intercepts all reads, writes, network IO, and shell commands</li>
-        <li>Enrolls the session with your phone (tap <strong>Allow</strong> on the first prompt)</li>
-        <li>Streams activity to your phone in real time</li>
+        <li><strong>Approve or deny requests.</strong> Each request shows the tool, the input, and the risk level. Tap <strong>Allow</strong>, <strong>Always Allow</strong>, <strong>Deny</strong>, or <strong>Deny &amp; Stop</strong>.</li>
+        <li><strong>Watch the activity stream.</strong> Every tool call, file edit, and response streams in real time. Scrub back through anything the agent has done in the session.</li>
+        <li><strong>Talk to your agent.</strong> The Activity tab has an input bar. Anything you type is sent to the agent as if you typed it at the terminal.</li>
+        <li><strong>Run multiple agents at once.</strong> Spawn agents on different working directories, or different hosts, and switch between them in the home screen.</li>
+        <li><strong>Pull the plug.</strong> Tap the stop button on any session to terminate the agent immediately.</li>
       </ul>
-      <p>To resume a previous session:</p>
-      <pre><code>hearth connect --project myproject --resume SESSION_ID</code></pre>
-
-      <h2>Step 5: Test It</h2>
-      <p>Ask your agent to do something that requires permission, like writing a file:</p>
-      <pre><code>echo "test" > /tmp/hearth-test.txt</code></pre>
-      <p>You should see a request appear on your phone. Tap <strong>Allow</strong> and the agent will continue. If you tap <strong>Always Allow</strong>, a rule is created and the agent won't ask again for that class of command in this project.</p>
 
       <h2>How the Rules Work</h2>
       <p>Rules are the core of the system. Tapping "Always Allow" doesn't just approve the request &mdash; it generates a pattern that auto-approves future matching commands without interrupting you.</p>
