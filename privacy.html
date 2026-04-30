@@ -32,50 +32,67 @@
   <div class="legal">
     <div class="container">
       <h1>Privacy Policy</h1>
-      <p class="last-updated">Last updated: February 20, 2026</p>
+      <p class="last-updated">Last updated: April 30, 2026</p>
 
       <p>Hearth Cmd ("we", "our", "the Service") is operated by David Farrell. This policy describes what data we collect, how we use it, and your rights regarding that data.</p>
 
       <h2>1. Data We Collect</h2>
-      <p>Hearth Cmd collects the minimum data necessary to deliver permission request notifications to your device:</p>
+      <p>Hearth Cmd collects the data necessary to authenticate you, route permission requests to your device, and let you organize AI agents across hosts:</p>
       <ul>
-        <li><strong>Device identifier:</strong> A randomly generated UUID created on your device and stored in your iCloud Keychain. This identifier is used to route permission requests to your device. It is not linked to your Apple ID, name, or any other personal information.</li>
-        <li><strong>Device secret:</strong> A cryptographic secret generated on your device and stored in your iCloud Keychain. This is used to authenticate communication between the app and the relay server.</li>
-        <li><strong>APNs token:</strong> A token provided by Apple Push Notification service, used solely to deliver push notifications when the app is not in the foreground. This token is device-specific and does not identify you personally.</li>
-        <li><strong>Permission request data:</strong> When your AI coding agent sends a permission request, the request content (tool name, command, file path, etc.) is relayed through our server to your device. Request metadata — including the tool name, tool input, your decision, and a timestamp — is logged and archived for operational and dispute resolution purposes. These logs allow us to investigate issues and verify what actions were requested and how they were resolved.</li>
-        <li><strong>Always-allow rules:</strong> If you choose "Always Allow" for a request, a pattern-based rule is stored on the server associated with your device identifier. You can view and delete these rules at any time in the app.</li>
-        <li><strong>Activity stream data:</strong> If you enable the <code>--activity</code> flag, Claude Code's transcript entries (tool calls, text responses, and user messages) are streamed through our server to your device in real time. This data is relayed in memory only &mdash; it is never written to disk, logged, or stored on our servers.</li>
+        <li><strong>Email address:</strong> You sign in by entering your email address; we send a 6-digit one-time passcode (OTP) to that address. Your verified email is stored on the server and used to identify you across devices, to deliver invitations to organizations you've been added to, and to contact you about your account. If an organization admin invites someone, the invitee's email address is stored on the server until the invite is accepted, revoked, or expires.</li>
+        <li><strong>Account identifiers:</strong> When you first verify your email, the server creates a user record with a randomly generated UUID. Additional UUIDs identify the organizations you belong to, the AI agents and hosts you create, and the devices you sign in from. These identifiers are not linked to your Apple ID.</li>
+        <li><strong>Display name (optional):</strong> If you set a name on your user profile, it is stored on the server so other members of your organizations can see who they are collaborating with.</li>
+        <li><strong>Device identifier &amp; secret:</strong> A randomly generated UUID and cryptographic secret are created on your device on first sign-in and stored in your iCloud Keychain. They authenticate the app to our relay server. The secret is stored hashed on the server.</li>
+        <li><strong>Push notification token:</strong> A token issued by Apple Push Notification service (APNs), used solely to deliver push notifications when the app is not in the foreground. The token is device-specific and does not identify you personally.</li>
+        <li><strong>Organization, host, and agent metadata:</strong> When you create an organization, a host registration, an AI agent, a job description, or a working directory, the labels and configuration you provide are stored on the server. This includes:
+          <ul>
+            <li>Organization names you choose (e.g. "Smith Household").</li>
+            <li>Hostnames of the machines where the daemon runs.</li>
+            <li>Filesystem paths you designate as agent working directories (e.g. <code>/Users/alice/projects/website</code>).</li>
+            <li>Display names you give to AI agents (e.g. "Alice's Gardener") and to your devices (e.g. "Alice's iPhone").</li>
+            <li>The job-description text you write to direct an agent — title, mandate, and required skills — which is free-form Markdown that you author.</li>
+            <li>The list of AI brain models, harnesses (Claude Code, Codex, etc.), and skills configured for each agent.</li>
+          </ul>
+        </li>
+        <li><strong>Permission request data:</strong> When an AI agent attempts a tool call (a shell command, file read or write, network request, etc.) the request content — tool name, tool input (which may include commands and file paths), and contextual metadata — is relayed through our server to your device. Your decision (Allow / Deny / Always Allow) and the timestamp are logged on the server for operational, audit, and dispute-resolution purposes.</li>
+        <li><strong>Auto-approve rules:</strong> If you choose "Always Allow" for a request, a pattern-based rule (e.g. <code>Bash(git *)</code>) is stored on the server, scoped to the position of the agent it was created for. You can view and delete these rules at any time in the app.</li>
+        <li><strong>Subscription data:</strong> If you purchase a Hearth Cmd Pro subscription, the App Store transaction identifier, product identifier, environment (sandbox or production), purchase and expiration timestamps, and the signed transaction (a JWS issued by Apple) are stored on the server to verify and maintain your Pro entitlement. We do not receive your payment information from Apple.</li>
+        <li><strong>Activity stream data:</strong> While an agent session is open, the agent's transcript entries (tool calls, text responses, user messages) stream through our server to your device in real time. This data is relayed in memory only &mdash; it is never written to disk, logged, or stored on our servers. Only the permission-request metadata described above is persisted.</li>
+        <li><strong>OTP request IP address:</strong> When you request a one-time passcode, the originating IP address is recorded on the server for abuse rate-limiting on that endpoint. It is not used for tracking, profiling, or analytics.</li>
       </ul>
 
       <h2>2. Data We Do Not Collect</h2>
       <ul>
-        <li>We do not collect your name, email address, or Apple ID.</li>
-        <li>We do not collect your IP address for tracking purposes.</li>
-        <li>We do not collect analytics, usage metrics, or telemetry.</li>
-        <li>We do not use cookies or third-party tracking.</li>
-        <li>We do not access your source code, files, or any data on your computer beyond what is included in the permission request payload sent by the hook script.</li>
+        <li>We do not collect your Apple ID or Apple-supplied advertising identifier (IDFA).</li>
+        <li>We do not collect analytics, usage metrics, or product-interaction telemetry beyond what is described above.</li>
+        <li>We do not use cookies or third-party tracking on the app or the marketing site (the site's only third-party script is Google Analytics for aggregate site-traffic stats; the app does not load it).</li>
+        <li>We do not access your source code, files, or any data on your computer beyond what is included in a permission request that the agent itself sends to the server.</li>
+        <li>Activity-stream transcripts are not retained on our servers.</li>
       </ul>
 
       <h2>3. How We Use Your Data</h2>
       <p>All data collected is used exclusively to provide the core functionality of the Service:</p>
       <ul>
-        <li>Routing permission requests from your AI coding agent to your device.</li>
-        <li>Sending push notifications to wake the app when a request arrives.</li>
-        <li>Evaluating always-allow rules to auto-approve matching requests.</li>
+        <li>Authenticating you via email OTP and maintaining your sign-in across devices.</li>
+        <li>Routing permission requests from your AI agents to your devices and other members of your organization.</li>
+        <li>Sending push notifications to wake the app when a request arrives or when an agent needs your input.</li>
+        <li>Evaluating auto-approve rules to handle matching requests without prompting you.</li>
+        <li>Delivering and tracking organization invitations.</li>
+        <li>Verifying and maintaining your Hearth Cmd Pro subscription.</li>
       </ul>
-      <p>We do not sell, share, or transfer your data to any third party, except Apple Push Notification service (APNs) for the sole purpose of delivering notifications.</p>
+      <p>We do not sell, share, or transfer your data to any third party, except (a) Apple Push Notification service for the sole purpose of delivering notifications, (b) Apple's StoreKit servers for verifying subscription transactions, and (c) the email service used to send OTPs and invitations.</p>
 
       <h2>4. Data Storage and Security</h2>
       <ul>
         <li>Your device identifier and secret are stored in your iCloud Keychain, which is end-to-end encrypted by Apple.</li>
-        <li>The relay server stores your device identifier (hashed secret) and APNs token in a database to route requests and send notifications.</li>
-        <li>Always-allow rules are stored server-side and associated with your device identifier.</li>
+        <li>The relay server stores your account record, organization data, agent and host metadata, hashed device secrets, push tokens, auto-approve rules, and subscription state in a database hosted on infrastructure we control.</li>
+        <li>One-time passcodes are stored hashed (SHA-256), not in plain text, and expire after a short window.</li>
         <li>All communication between the app and the server uses TLS encryption (HTTPS/WSS).</li>
-        <li>Permission request metadata (tool name, tool input, decision, and timestamps) is logged for operational, audit, and dispute resolution purposes. Active log files are rotated automatically; older logs may be moved to cold storage and retained indefinitely.</li>
+        <li>Permission request metadata (tool name, tool input, decision, and timestamps) is logged for operational, audit, and dispute-resolution purposes. Active log files are rotated automatically; older logs may be moved to cold storage and retained indefinitely.</li>
       </ul>
 
       <h2>5. Data Retention</h2>
-      <p>Device registrations and always-allow rules are retained as long as you use the Service. Permission request logs may be archived to cold storage and retained indefinitely for audit and compliance purposes. If you uninstall the app, your device registration will become orphaned (no further requests can be delivered).</p>
+      <p>Account records, organization and agent metadata, auto-approve rules, and subscription records are retained for as long as you use the Service. Permission-request logs may be archived to cold storage and retained indefinitely for audit and compliance purposes. To delete your account and associated data, contact us at <a href="mailto:support@hearthcmd.com">support@hearthcmd.com</a>; we will remove your user record, organization memberships, device registrations, and auto-approve rules. Permission-request log entries may be retained in audit archives in pseudonymous form (referenced by UUID).</p>
 
       <h2>6. Children's Privacy</h2>
       <p>Hearth Cmd is not directed at children under 13 and we do not knowingly collect data from children.</p>
