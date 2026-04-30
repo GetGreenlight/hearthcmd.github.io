@@ -38,64 +38,73 @@
       <h2>Getting Started</h2>
       <p>For a detailed walkthrough including how the rules system works, see the <a href="guide.html">setup guide</a>.</p>
 
-      <h3>1. Install the App</h3>
-      <p>Download Hearth Cmd from the App Store and open it. The app will automatically generate a unique device ID and connect to the relay server.</p>
-
-      <h3>2. Copy Your Device ID</h3>
-      <p>Go to the <strong>About</strong> tab in the app and tap your Device ID to copy it to the clipboard. You'll need this for the next steps.</p>
-
-      <h3>3. Install hearth-cmd-cli</h3>
-      <p>Run the install script (requires Go 1.19+):</p>
+      <h3>1. Install the CLI</h3>
       <pre><code>curl -sSL https://hearthcmd.com/install.sh | bash</code></pre>
-      <p>This clones the repo, builds from source, and installs the binary to <code>/usr/local/bin</code>.</p>
-      <p>Alternatively, unsigned pre-built binaries are available from <a href="https://github.com/GetGreenlight/hearth-cmd-cli/releases">GitHub releases</a> (see that page for macOS Gatekeeper instructions).</p>
-      <p>Register your device ID (you only need to do this once):</p>
-      <pre><code>hearth register YOUR_DEVICE_ID</code></pre>
-      <p>You can also pass <code>--device-id</code> as a flag or set the <code>HEARTH_DEVICE_ID</code> environment variable.</p>
+      <p>Installs the <code>hearth</code> binary to <code>/usr/local/bin</code>. Pre-built binaries are also available from <a href="https://github.com/GetGreenlight/hearth-cmd-cli/releases">GitHub releases</a> (see that page for macOS Gatekeeper instructions).</p>
 
-      <h3>4. Set Your Default Agent</h3>
-      <pre><code>hearth agent claude</code></pre>
-      <p>Supported values: <code>claude</code>, <code>copilot</code>, <code>cursor</code>, <code>codex</code>, <code>pi</code>. You only need to do this once.</p>
+      <h3>2. Log In</h3>
+      <pre><code>hearth login you@example.com</code></pre>
+      <p>Hearth Cmd emails a 6-digit code to that address. Paste it at the prompt to enroll this machine as a host under your account. First-time users are also asked for a display name and an organization name.</p>
 
-      <h3>5. Launch</h3>
-      <pre><code>cd your-project
-hearth connect --project myproject</code></pre>
-      <p>hearth-cmd-cli launches your agent in yolo mode so it never blocks on a terminal prompt. Hearth Cmd's libhook permission engine intercepts all reads, writes, network IO, and shell commands &mdash; forwarding them to your phone for approval. The first time, you'll see a session enrollment prompt on your phone &mdash; tap <strong>Allow</strong>.</p>
-      <p>To resume a previous session:</p>
-      <pre><code>hearth connect --project myproject --resume SESSION_ID</code></pre>
+      <h3>3. Start the Daemon</h3>
+      <pre><code>hearth start</code></pre>
+      <p>The daemon listens for spawn requests from the app. <code>hearth status</code> shows whether it's running; <code>hearth stop</code> shuts it down. The daemon does not auto-start on boot.</p>
 
-      <h3>6. Test It</h3>
-      <p>Ask your agent to do something that requires permission, like writing a file. You should see a request appear in the app.</p>
+      <h3>4. Sign In on Your Phone</h3>
+      <p>Download Hearth Cmd from the App Store, enter the same email, and enter the OTP that arrives in your inbox. The host you just enrolled shows up in the host list.</p>
+
+      <h3>5. Spawn an Agent from the App</h3>
+      <p>Tap <strong>+ New Agent</strong>, pick the host, pick a working directory, pick the agent (Claude Code, Copilot CLI, Cursor CLI, Codex CLI, or Pi), and tap <strong>Start</strong>. The agent runs on your laptop in yolo mode while approvals and the activity stream go to your phone.</p>
 
 
-      <h2>hearth-cmd-cli Options</h2>
+      <h2>CLI Reference</h2>
       <table>
         <thead>
           <tr>
-            <th>Option</th>
+            <th>Command</th>
             <th>Description</th>
-            <th>Default</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><code>--device-id ID</code></td>
-            <td>Your device ID from the app</td>
-            <td>Config file or env var</td>
+            <td><code>hearth login &lt;email&gt;</code></td>
+            <td>Log in via email OTP and enroll this host. <code>--invite &lt;token&gt;</code> joins an existing org.</td>
           </tr>
           <tr>
-            <td><code>--project NAME</code></td>
-            <td>Project name shown in the app. Rules are scoped per-project.</td>
-            <td>Required</td>
+            <td><code>hearth start</code></td>
+            <td>Start the daemon on this host.</td>
           </tr>
           <tr>
-            <td><code>--resume SESSION_ID</code></td>
-            <td>Resume a previous session instead of starting a new one</td>
-            <td>&mdash;</td>
+            <td><code>hearth stop</code></td>
+            <td>Stop the daemon.</td>
+          </tr>
+          <tr>
+            <td><code>hearth status</code></td>
+            <td>Show daemon status.</td>
+          </tr>
+          <tr>
+            <td><code>hearth talk</code></td>
+            <td>Open a TUI to talk to active agent instances from this terminal.</td>
+          </tr>
+          <tr>
+            <td><code>hearth org</code></td>
+            <td>Manage organization, users, hosts, devices, agents, and invites.</td>
+          </tr>
+          <tr>
+            <td><code>hearth wd</code></td>
+            <td>Manage working directories (list, create, update, abandon, delete).</td>
+          </tr>
+          <tr>
+            <td><code>hearth update</code></td>
+            <td>Update <code>hearth</code> to the latest version.</td>
+          </tr>
+          <tr>
+            <td><code>hearth logout</code></td>
+            <td>Sign out on this machine: stops the daemon, revokes credentials, clears config.</td>
           </tr>
         </tbody>
       </table>
-      <p>Configuration priority: command-line flag &gt; environment variable (<code>HEARTH_DEVICE_ID</code>) &gt; config file (<code>~/.hearth/config</code>).</p>
+      <p>Run <code>hearth &lt;command&gt; --help</code> for details. Config lives in <code>~/.hearth/config</code>.</p>
 
       <h2>Using the App</h2>
 
@@ -132,24 +141,25 @@ hearth connect --project myproject</code></pre>
 
       <h2 id="troubleshooting">Troubleshooting</h2>
 
-      <h3>Not receiving requests</h3>
+      <h3>Host not appearing in the app</h3>
       <ul>
-        <li>Check the <strong>About</strong> tab &mdash; the status should show "Connected" with a green dot.</li>
-        <li>Verify your device ID in <code>~/.hearth/config</code> matches the one shown in the app.</li>
-        <li>Make sure you launched your agent with <code>hearth connect</code>.</li>
+        <li>Make sure the daemon is running: <code>hearth status</code>.</li>
+        <li>Confirm you're signed in to the same account on the CLI and the app &mdash; <code>hearth login</code> emails an OTP to the address you specify, and the app's email must match.</li>
+        <li>Check the <strong>About</strong> tab in the app &mdash; status should show "Connected" with a green dot.</li>
       </ul>
 
-      <h3>Session not appearing on phone</h3>
+      <h3>Agent won't spawn from the app</h3>
       <ul>
-        <li>Verify the device ID in your <code>~/.hearth/config</code> matches the one in the app's <strong>About</strong> tab.</li>
-        <li>Check the phone's connection status &mdash; the <strong>About</strong> tab should show a green "Connected" dot.</li>
-        <li>The session should appear immediately when you run <code>hearth connect</code>. If it doesn't, check the hearth log file for errors.</li>
+        <li>Confirm <code>hearth status</code> shows the daemon as running on the target host.</li>
+        <li>Make sure the working directory exists on that host and is readable.</li>
+        <li>Make sure the agent binary you picked (e.g. <code>claude</code>) is installed and on the daemon's <code>PATH</code>.</li>
+        <li>Check the daemon log for errors. Path is shown by <code>hearth status</code>.</li>
       </ul>
 
       <h3>Talk to Your Agent not working</h3>
       <ul>
         <li>Talk to Your Agent requires a Hearth Cmd Pro subscription.</li>
-        <li>You must launch your agent with <code>hearth connect</code>.</li>
+        <li>The agent must have been spawned via the app (or via the daemon on this host).</li>
         <li>Check that the Activity tab shows an input bar at the bottom when viewing the session.</li>
       </ul>
 
