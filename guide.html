@@ -87,6 +87,55 @@ Enter the code: 123456</code></pre>
         <li><strong>Pull the plug.</strong> Tap the stop button on any session to terminate the agent immediately.</li>
       </ul>
 
+      <h2>CLI Reference</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Command</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>hearth login &lt;email&gt;</code></td>
+            <td>Log in via email OTP and enroll this host. <code>--invite &lt;token&gt;</code> joins an existing org.</td>
+          </tr>
+          <tr>
+            <td><code>hearth start</code></td>
+            <td>Start the daemon on this host.</td>
+          </tr>
+          <tr>
+            <td><code>hearth stop</code></td>
+            <td>Stop the daemon.</td>
+          </tr>
+          <tr>
+            <td><code>hearth status</code></td>
+            <td>Show daemon status.</td>
+          </tr>
+          <tr>
+            <td><code>hearth talk</code></td>
+            <td>Open a TUI to talk to active agent instances from this terminal.</td>
+          </tr>
+          <tr>
+            <td><code>hearth org</code></td>
+            <td>Manage organization, users, hosts, devices, agents, and invites.</td>
+          </tr>
+          <tr>
+            <td><code>hearth wd</code></td>
+            <td>Manage working directories (list, create, update, abandon, delete).</td>
+          </tr>
+          <tr>
+            <td><code>hearth update</code></td>
+            <td>Update <code>hearth</code> to the latest version.</td>
+          </tr>
+          <tr>
+            <td><code>hearth logout</code></td>
+            <td>Sign out on this machine: stops the daemon, revokes credentials, clears config.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Run <code>hearth &lt;command&gt; --help</code> for details. Config lives in <code>~/.hearth/config</code>.</p>
+
       <h2>How the Rules Work</h2>
       <p>Rules are the core of the system. Tapping "Always Allow" doesn't just approve the request &mdash; it generates a pattern that auto-approves future matching commands without interrupting you.</p>
 

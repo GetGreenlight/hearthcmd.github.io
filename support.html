@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Support &amp; Setup - Hearth Cmd</title>
-  <meta name="description" content="Get started with Hearth Cmd. Installation instructions, setup guide, and support for AI agent management.">
+  <title>Support - Hearth Cmd</title>
+  <meta name="description" content="Troubleshooting and support for Hearth Cmd.">
   <link rel="icon" type="image/svg+xml" href="hearthcmd.svg">
   <link rel="apple-touch-icon" href="hearthcmd-180.png">
   <link rel="stylesheet" href="style.css">
@@ -33,111 +33,9 @@
 
   <div class="docs">
     <div class="container">
-      <h1>Support & Setup Guide</h1>
+      <h1>Support</h1>
 
-      <h2>Getting Started</h2>
-      <p>For a detailed walkthrough including how the rules system works, see the <a href="guide.html">setup guide</a>.</p>
-
-      <h3>1. Install the CLI</h3>
-      <pre><code>curl -sSL https://hearthcmd.com/install.sh | bash</code></pre>
-      <p>Installs the <code>hearth</code> binary to <code>/usr/local/bin</code>. Pre-built binaries are also available from <a href="https://github.com/GetGreenlight/hearth-cmd-cli/releases">GitHub releases</a> (see that page for macOS Gatekeeper instructions).</p>
-
-      <h3>2. Log In</h3>
-      <pre><code>hearth login you@example.com</code></pre>
-      <p>Hearth Cmd emails a 6-digit code to that address. Paste it at the prompt to enroll this machine as a host under your account. First-time users are also asked for a display name and an organization name.</p>
-
-      <h3>3. Start the Daemon</h3>
-      <pre><code>hearth start</code></pre>
-      <p>The daemon listens for spawn requests from the app. <code>hearth status</code> shows whether it's running; <code>hearth stop</code> shuts it down. The daemon does not auto-start on boot.</p>
-
-      <h3>4. Sign In on Your Phone</h3>
-      <p>Download Hearth Cmd from the App Store, enter the same email, and enter the OTP that arrives in your inbox. The host you just enrolled shows up in the host list.</p>
-
-      <h3>5. Spawn an Agent from the App</h3>
-      <p>Tap <strong>+ New Agent</strong>, pick the host, pick a working directory, pick the agent (Claude Code, Copilot CLI, Cursor CLI, Codex CLI, or Pi), and tap <strong>Start</strong>. The agent runs on your laptop in yolo mode while approvals and the activity stream go to your phone.</p>
-
-
-      <h2>CLI Reference</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Command</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>hearth login &lt;email&gt;</code></td>
-            <td>Log in via email OTP and enroll this host. <code>--invite &lt;token&gt;</code> joins an existing org.</td>
-          </tr>
-          <tr>
-            <td><code>hearth start</code></td>
-            <td>Start the daemon on this host.</td>
-          </tr>
-          <tr>
-            <td><code>hearth stop</code></td>
-            <td>Stop the daemon.</td>
-          </tr>
-          <tr>
-            <td><code>hearth status</code></td>
-            <td>Show daemon status.</td>
-          </tr>
-          <tr>
-            <td><code>hearth talk</code></td>
-            <td>Open a TUI to talk to active agent instances from this terminal.</td>
-          </tr>
-          <tr>
-            <td><code>hearth org</code></td>
-            <td>Manage organization, users, hosts, devices, agents, and invites.</td>
-          </tr>
-          <tr>
-            <td><code>hearth wd</code></td>
-            <td>Manage working directories (list, create, update, abandon, delete).</td>
-          </tr>
-          <tr>
-            <td><code>hearth update</code></td>
-            <td>Update <code>hearth</code> to the latest version.</td>
-          </tr>
-          <tr>
-            <td><code>hearth logout</code></td>
-            <td>Sign out on this machine: stops the daemon, revokes credentials, clears config.</td>
-          </tr>
-        </tbody>
-      </table>
-      <p>Run <code>hearth &lt;command&gt; --help</code> for details. Config lives in <code>~/.hearth/config</code>.</p>
-
-      <h2>Using the App</h2>
-
-      <h3>Permission Decisions</h3>
-      <p>Each request can be responded to with four actions:</p>
-      <ul>
-        <li><strong>Always Allow</strong> — Approves and creates a rule so future matching requests are auto-approved.</li>
-        <li><strong>Allow</strong> — Approves this one request.</li>
-        <li><strong>Deny</strong> — Denies this one request.</li>
-        <li><strong>Deny & Stop</strong> — Denies and sends a halt signal to stop the agent entirely.</li>
-      </ul>
-
-      <h3>How Rules Work</h3>
-      <p>Tapping "Always Allow" generates a pattern that auto-approves future matching commands without interrupting you.</p>
-      <p>Patterns are <strong>subcommand-aware</strong>. The system knows that <code>git push</code> and <code>git status</code> are different operations:</p>
-      <ul>
-        <li><code>go build ./cmd/foo</code> &rarr; pattern <code>Bash(go build **)</code> &mdash; matches any <code>go build</code></li>
-        <li><code>git push origin main</code> &rarr; pattern <code>Bash(git push **)</code> &mdash; matches any <code>git push</code>, but not <code>git reset</code></li>
-        <li><code>aws s3 cp file.txt s3://bucket/</code> &rarr; pattern <code>Bash(aws s3 cp **)</code> &mdash; three-word prefix for AWS/GCloud</li>
-      </ul>
-      <p>Commands like <code>rm</code>, <code>sudo</code>, <code>kill</code>, and <code>chmod</code> use <strong>exact matching</strong>. Granting <code>rm -rf /tmp/coverage</code> creates a rule that matches only that exact string &mdash; not <code>rm -rf /home</code>.</p>
-      <p>For compound commands like <code>git add . && git commit -m "msg" && git push</code>, the system splits into segments and generates a separate pattern for each. All segments must have matching rules for auto-approval. Each segment is color-coded by risk (green/orange/red) and segments already covered by rules show a checkmark overlay.</p>
-      <p>For <code>Read</code>, <code>Write</code>, and <code>Edit</code> tools, patterns match on the directory (e.g., <code>Edit(/home/user/project/src/**)</code>).</p>
-
-      <h3>Managing Rules</h3>
-      <p>The <strong>Grants</strong> tab shows all your "Always Allow" rules grouped by project. Swipe left on any rule to delete it.</p>
-
-      <h3>Talk to Your Agent from Your Phone</h3>
-      <p>The Activity tab shows an input bar at the bottom. Anything you type is sent directly to your agent session as if you typed it at the terminal. Use this to answer prompts, provide additional context, or nudge your agent in a different direction.</p>
-      <p>Talk to Your Agent requires Hearth Cmd Pro. Pro also includes push notifications so you never miss a request.</p>
-
-      <h3>Notifications</h3>
-      <p>Hearth Cmd uses Time Sensitive notifications that can break through Focus modes. Make sure notifications are enabled in <strong>Settings &rarr; Hearth Cmd &rarr; Notifications</strong> and that Time Sensitive notifications are allowed in your Focus mode settings.</p>
+      <p>For installation, login, and how-to walkthroughs, see the <a href="guide.html">setup guide</a>. This page is for troubleshooting and getting in touch when something isn't working.</p>
 
       <h2 id="troubleshooting">Troubleshooting</h2>
 
